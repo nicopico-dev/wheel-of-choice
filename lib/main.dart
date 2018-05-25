@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:wheel_of_choice/choice_list.dart';
+import 'package:wheel_of_choice/home.dart';
+import 'package:wheel_of_choice/data.dart';
+import 'package:wheel_of_choice/settings.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(WheelOfChoiceApp());
 
-class MyApp extends StatelessWidget {
+class WheelOfChoiceApp extends StatefulWidget {
+  @override
+  WheelOfChoiceAppState createState() => WheelOfChoiceAppState();
+}
+
+class WheelOfChoiceAppState extends State<WheelOfChoiceApp> {
+  ChoiceData choices;
+
+  @override
+  void initState() {
+    super.initState();
+    choices = ChoiceData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,7 +27,10 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           accentColor: Colors.amberAccent,
           accentColorBrightness: Brightness.dark),
-      home: ChoiceEditionPage(),
+      routes: <String, WidgetBuilder>{
+        '/': (context) => Home(choices),
+        '/settings': (context) => Settings(choices)
+      },
     );
   }
 }
