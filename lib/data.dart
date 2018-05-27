@@ -12,7 +12,6 @@ class Choice {
 }
 
 class ChoiceData extends ChangeNotifier {
-
   final List<Choice> _choices = <Choice>[
     Choice(name: 'Boulangerie', color: Colors.brown),
     Choice(name: 'Japonais', color: Colors.indigo),
@@ -32,5 +31,12 @@ class ChoiceData extends ChangeNotifier {
   void remove(Choice choice) {
     _choices.remove(choice);
     notifyListeners();
+  }
+
+  void change({@required Choice from, @required Choice to}) {
+    var index = _choices.indexOf(from);
+    _choices
+      ..removeAt(index)
+      ..insert(index, to);
   }
 }

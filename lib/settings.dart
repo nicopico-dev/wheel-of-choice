@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:wheel_of_choice/choice_color_swatch.dart';
+import 'package:wheel_of_choice/choice_editor.dart';
 import 'package:wheel_of_choice/data.dart';
 
 class Settings extends StatefulWidget {
@@ -30,8 +33,9 @@ class _SettingsState extends State<Settings> {
           child: SafeArea(
             child: ListView.builder(
               itemCount: _choices.size,
-              itemBuilder: (context, index) => _buildListItem(
-                  context, _choices[index],
+              itemBuilder: (context, index) => _buildListItem(context,
+                  choice: _choices[index],
+                  onTap: _editChoice,
                   onDismissed: _removeChoice),
             ),
           ),
@@ -42,8 +46,10 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, Choice choice,
-      {Function(BuildContext, Choice) onDismissed}) {
+  Widget _buildListItem(BuildContext context,
+      {@required Choice choice,
+      Function(BuildContext, Choice) onTap,
+      Function(BuildContext, Choice) onDismissed}) {
     var removingText = Text(
       "Supprimer",
       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
@@ -52,7 +58,8 @@ class _SettingsState extends State<Settings> {
       key: Key(choice.name),
       child: ListTile(
           title: Text(choice.name),
-          trailing: ChoiceColorSwatch(color: choice.color)),
+          trailing: ChoiceColorSwatch(color: choice.color),
+          onTap: () => onTap(context, choice)),
       background: new Container(
         color: Colors.red,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -105,10 +112,37 @@ class _SettingsState extends State<Settings> {
 
   void _addNewChoice() {
     if (_newChoiceTextController.text.isEmpty) return;
-    var newChoice = Choice(name: _newChoiceTextController.text);
+    var choiceName = _newChoiceTextController.text;
+    var choiceColor = _colors[_choices.size % _colors.length];
+    var newChoice = Choice(name: choiceName, color: choiceColor);
     _newChoiceTextController.clear();
     setState(() {
       _choices.add(newChoice);
     });
   }
+
+  void _editChoice(BuildContext context, final Choice choice) {
+    final futureChoice = showModalBottomSheet(
+        context: context, builder: (context) => ChoiceEditor(choice: choice));
+    futureChoice.then((editedChoice) {
+      if (editedChoice is Choice) {
+        setState(() {
+          _choices.change(from: choice, to: editedChoice);
+        });
+      }
+    });
+  }
 }
+
+final _colors = <Color>[
+  Colors.brown,
+  Colors.indigo,
+  Colors.red,
+  Colors.yellow,
+  Colors.cyan,
+  Colors.green,
+  Colors.amber,
+  Colors.blue,
+  Colors.deepPurple,
+  Colors.teal
+];
