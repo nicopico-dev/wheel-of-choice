@@ -11,7 +11,6 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-
   final _newChoiceTextController = TextEditingController();
   ChoiceData _choices;
 
@@ -30,8 +29,9 @@ class _SettingsState extends State<Settings> {
           child: SafeArea(
             child: ListView.builder(
               itemCount: _choices.size,
-              itemBuilder: (context, index) =>
-                  _buildListItem(context, _choices[index], onDismissed: _removeChoice),
+              itemBuilder: (context, index) => _buildListItem(
+                  context, _choices[index],
+                  onDismissed: _removeChoice),
             ),
           ),
         ),
@@ -42,10 +42,24 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget _buildListItem(BuildContext context, Choice choice, {Function(BuildContext, Choice) onDismissed}) {
+    var removingText = Text(
+      "Supprimer",
+      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+    );
     return Dismissible(
       key: Key(choice.name),
       child: ListTile(title: Text(choice.name)),
-      background: new Container(color: Colors.red),
+      background: new Container(
+        color: Colors.red,
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          children: <Widget>[
+            removingText,
+            Spacer(),
+            removingText
+          ],
+        ),
+      ),
       onDismissed: (_) => onDismissed(context, choice),
     );
   }
@@ -64,7 +78,7 @@ class _SettingsState extends State<Settings> {
                   child: TextField(
                     decoration: InputDecoration(hintText: "Add a new choice"),
                     controller: _newChoiceTextController,
-                    onSubmitted: (_) => _addNewChoice,
+                    onSubmitted: (_) => _addNewChoice(),
                   ),
                 ),
                 SizedBox(width: 8.0),
@@ -85,8 +99,8 @@ class _SettingsState extends State<Settings> {
     setState(() {
       _choices.remove(choice);
     });
-    Scaffold.of(context)
-        .showSnackBar(SnackBar(content: Text("\"${choice.name}\" was removed")));
+    Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text("\"${choice.name}\" was removed")));
   }
 
   void _addNewChoice() {
