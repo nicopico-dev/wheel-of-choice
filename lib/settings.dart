@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wheel_of_choice/choice_color_swatch.dart';
 import 'package:wheel_of_choice/data.dart';
 
 class Settings extends StatefulWidget {
@@ -41,23 +42,22 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, Choice choice, {Function(BuildContext, Choice) onDismissed}) {
+  Widget _buildListItem(BuildContext context, Choice choice,
+      {Function(BuildContext, Choice) onDismissed}) {
     var removingText = Text(
       "Supprimer",
       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
     );
     return Dismissible(
       key: Key(choice.name),
-      child: ListTile(title: Text(choice.name)),
+      child: ListTile(
+          title: Text(choice.name),
+          trailing: ChoiceColorSwatch(color: choice.color)),
       background: new Container(
         color: Colors.red,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
-          children: <Widget>[
-            removingText,
-            Spacer(),
-            removingText
-          ],
+          children: <Widget>[removingText, Spacer(), removingText],
         ),
       ),
       onDismissed: (_) => onDismissed(context, choice),
