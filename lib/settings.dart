@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:wheel_of_choice/choice_color_swatch.dart';
 import 'package:wheel_of_choice/choice_editor.dart';
+import 'package:wheel_of_choice/colors.dart';
 import 'package:wheel_of_choice/data.dart';
 
 class Settings extends StatefulWidget {
@@ -102,23 +101,13 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void _removeChoice(BuildContext context, Choice choice) {
-    setState(() {
-      _choices.remove(choice);
-    });
-    Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text("\"${choice.name}\" was removed")));
-  }
-
   void _addNewChoice() {
     if (_newChoiceTextController.text.isEmpty) return;
     var choiceName = _newChoiceTextController.text;
-    var choiceColor = _colors[_choices.size % _colors.length];
+    var choiceColor = choiceColors[_choices.size % choiceColors.length];
     var newChoice = Choice(name: choiceName, color: choiceColor);
     _newChoiceTextController.clear();
-    setState(() {
-      _choices.add(newChoice);
-    });
+    setState(() => _choices.add(newChoice));
   }
 
   void _editChoice(BuildContext context, final Choice choice) {
@@ -126,23 +115,14 @@ class _SettingsState extends State<Settings> {
         context: context, builder: (context) => ChoiceEditor(choice: choice));
     futureChoice.then((editedChoice) {
       if (editedChoice is Choice) {
-        setState(() {
-          _choices.change(from: choice, to: editedChoice);
-        });
+        setState(() => _choices.change(from: choice, to: editedChoice));
       }
     });
   }
-}
 
-final _colors = <Color>[
-  Colors.brown,
-  Colors.indigo,
-  Colors.red,
-  Colors.yellow,
-  Colors.cyan,
-  Colors.green,
-  Colors.amber,
-  Colors.blue,
-  Colors.deepPurple,
-  Colors.teal
-];
+  void _removeChoice(BuildContext context, Choice choice) {
+    setState(() => _choices.remove(choice));
+    Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text("\"${choice.name}\" was removed")));
+  }
+}

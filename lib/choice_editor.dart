@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wheel_of_choice/data.dart';
+import 'package:wheel_of_choice/color_picker.dart';
 
 class ChoiceEditor extends StatefulWidget {
   final Choice choice;
@@ -13,11 +14,13 @@ class ChoiceEditor extends StatefulWidget {
 
 class ChoiceEditorState extends State<ChoiceEditor> {
   final TextEditingController _textController = TextEditingController();
-  
+  Color _color;
+
   @override
   void initState() {
     super.initState();
     _textController.text = widget.choice.name;
+    _color = widget.choice.color;
   }
 
   @override
@@ -26,7 +29,7 @@ class ChoiceEditorState extends State<ChoiceEditor> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
           child: Column(
             children: <Widget>[
               Text(
@@ -38,22 +41,37 @@ class ChoiceEditorState extends State<ChoiceEditor> {
                 decoration: InputDecoration(hintText: "Choice name"),
                 keyboardType: TextInputType.text,
               ),
+              SizedBox(height: 16.0),
+              ColorPicker(
+                currentColor: widget.choice.color,
+                onColorChanged: _onColorChanged,
+              )
             ],
           ),
         ),
         Spacer(),
-        ButtonBar(
-          children: <Widget>[
-            FlatButton(
-                child: Text("Cancel"), onPressed: () => _onCancelled(context)),
-            FlatButton(
-                child: Text("Save"),
-                textColor: theme.primaryColorDark,
-                onPressed: () => _onSaved(context)),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              FlatButton(
+                  child: Text("Cancel"),
+                  onPressed: () => _onCancelled(context)),
+              FlatButton(
+                  child: Text("Save"),
+                  textColor: theme.primaryColorDark,
+                  onPressed: () => _onSaved(context)),
+            ],
+          ),
         )
       ],
     );
+  }
+
+  void _onColorChanged(Color color) {
+    setState(() => _color = color);
   }
 
   void _onCancelled(BuildContext context) {
@@ -61,8 +79,7 @@ class ChoiceEditorState extends State<ChoiceEditor> {
   }
 
   void _onSaved(BuildContext context) {
-    // TODO Handle color update
-    var editedChoice = Choice(name: _textController.text, color: widget.choice.color);
+    var editedChoice = Choice(name: _textController.text, color: _color);
     Navigator.of(context).pop(editedChoice);
   }
 }
