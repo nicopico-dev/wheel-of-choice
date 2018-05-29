@@ -5,10 +5,11 @@ final choiceColors = <Color>[
   Colors.indigo,
   Colors.red,
   Colors.yellow,
-  Colors.cyan,
+  Colors.orange,
   Colors.green,
   Colors.amber,
   Colors.blue,
   Colors.deepPurple,
-  Colors.teal
+  Colors.cyan,
+  Colors.pink
 ];

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:wheel_of_choice/colors.dart';
 
 class Choice {
   final String name;
@@ -13,10 +14,10 @@ class Choice {
 
 class ChoiceData extends ChangeNotifier {
   final List<Choice> _choices = <Choice>[
-    Choice(name: 'Boulangerie', color: Colors.brown),
-    Choice(name: 'Japonais', color: Colors.indigo),
-    Choice(name: 'Pizza', color: Colors.red),
-    Choice(name: 'Brasserie', color: Colors.yellow),
+    Choice(name: 'Boulangerie', color: choiceColors[0]),
+    Choice(name: 'Japonais', color: choiceColors[1]),
+    Choice(name: 'Pizza', color: choiceColors[2]),
+    Choice(name: 'Brasserie', color: choiceColors[3]),
   ];
   Iterable<Choice> get values => _choices;
 
