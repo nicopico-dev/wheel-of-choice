@@ -19,8 +19,8 @@ class ChoiceColorSwatch extends StatelessWidget {
     List<Widget> stackChildren = <Widget>[
       InkWell(
         child: Container(
-          width: swatchedSize == SwatchSize.Small ? 24.0 : null,
-          height: swatchedSize == SwatchSize.Small ? 24.0 : null,
+          width: swatchedSize == SwatchSize.Small ? 24.0 : 72.0,
+          height: swatchedSize == SwatchSize.Small ? 24.0 : 48.0,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: color,
@@ -38,7 +38,10 @@ class ChoiceColorSwatch extends StatelessWidget {
             shape: BoxShape.circle,
             color: Colors.white70,
           ),
-          child: Icon(Icons.check),
+          child: Icon(
+            Icons.check,
+            color: Colors.black45,
+          ),
           margin: EdgeInsets.all(4.0),
         ),
       );

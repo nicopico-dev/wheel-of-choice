@@ -23,21 +23,18 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = choiceColors
-        .map((color) => ChoiceColorSwatch(
-              color: color,
-              swatchedSize: SwatchSize.Big,
-              selected: color == _currentColor,
-              onColorSelected: () => onColorChanged(color),
-            ))
-        .toList();
-    return new GridView.count(
-      shrinkWrap: true,
+    List<Widget> children = choiceColors.map((color) {
+      return ChoiceColorSwatch(
+        color: color,
+        swatchedSize: SwatchSize.Big,
+        selected: color == _currentColor,
+        onColorSelected: () => onColorChanged(color),
+      );
+    }).toList();
+    return Wrap(
       children: children,
-      mainAxisSpacing: 4.0,
-      crossAxisSpacing: 4.0,
-      childAspectRatio: 1.5,
-      crossAxisCount: 4,
+      spacing: 8.0,
+      runSpacing: 8.0,
     );
   }
 

@@ -26,48 +26,78 @@ class ChoiceEditorState extends State<ChoiceEditor> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
-          child: Column(
-            children: <Widget>[
-              Text(
-                "Edition",
-                style: theme.textTheme.title,
-              ),
-              TextField(
-                controller: _textController,
-                decoration: InputDecoration(hintText: "Choice name"),
-                keyboardType: TextInputType.text,
-              ),
-              SizedBox(height: 16.0),
-              ColorPicker(
-                currentColor: widget.choice.color,
-                onColorChanged: _onColorChanged,
-              )
-            ],
+    return SafeArea(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+            child: _createPopupContent(context),
           ),
-        ),
-        Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              FlatButton(
-                  child: Text("Cancel"),
-                  onPressed: () => _onCancelled(context)),
-              FlatButton(
-                  child: Text("Save"),
-                  textColor: theme.primaryColorDark,
-                  onPressed: () => _onSaved(context)),
-            ],
-          ),
-        )
-      ],
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                    child: Text("Cancel"),
+                    onPressed: () => _onCancelled(context)),
+                FlatButton(
+                    child: Text("Save"),
+                    textColor: theme.primaryColorDark,
+                    onPressed: () => _onSaved(context)),
+              ],
+            ),
+          )
+        ],
+      ),
     );
+  }
+
+  Widget _createPopupContent(BuildContext context) {
+    var theme = Theme.of(context);
+    var title = Text(
+      "Edition",
+      style: theme.textTheme.title,
+    );
+    var choiceNameEditor = TextField(
+      controller: _textController,
+      decoration: InputDecoration(hintText: "Choice name"),
+      keyboardType: TextInputType.text,
+    );
+    var choiceColorPicker = ColorPicker(
+      currentColor: widget.choice.color,
+      onColorChanged: _onColorChanged,
+    );
+
+    final Orientation orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.portrait) {
+      return Column(
+        children: <Widget>[
+          title,
+          choiceNameEditor,
+          SizedBox(height: 16.0),
+          choiceColorPicker
+        ],
+      );
+    } else {
+      // Landscape
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: 150.0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[title, choiceNameEditor],
+            ),
+          ),
+          SizedBox(width: 32.0),
+          Flexible(child: choiceColorPicker),
+        ],
+      );
+    }
   }
 
   void _onColorChanged(Color color) {
