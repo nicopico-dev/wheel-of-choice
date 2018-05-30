@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wheel_of_choice/choice_color_swatch.dart';
-import 'package:wheel_of_choice/choice_editor.dart';
+import 'package:wheel_of_choice/components/choice_color_swatch.dart';
+import 'package:wheel_of_choice/components/choice_editor.dart';
 import 'package:wheel_of_choice/colors.dart';
 import 'package:wheel_of_choice/data.dart';
 

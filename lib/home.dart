@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wheel_of_choice/choice_wheel.dart';
+import 'package:wheel_of_choice/components/choice_wheel.dart';
 import 'package:wheel_of_choice/data.dart';
 
 class Home extends StatelessWidget {

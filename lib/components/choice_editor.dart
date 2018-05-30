@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wheel_of_choice/data.dart';
-import 'package:wheel_of_choice/color_picker.dart';
+import 'package:wheel_of_choice/components/color_picker.dart';
 
 class ChoiceEditor extends StatefulWidget {
   final Choice choice;
