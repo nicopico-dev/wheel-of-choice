@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:wheel_of_choice/home.dart';
 import 'package:wheel_of_choice/data.dart';
+import 'package:wheel_of_choice/persistence.dart';
 import 'package:wheel_of_choice/settings.dart';
 
 void main() => runApp(WheelOfChoiceApp());
 
-class WheelOfChoiceApp extends StatefulWidget {
-  @override
-  WheelOfChoiceAppState createState() => WheelOfChoiceAppState();
-}
+class WheelOfChoiceApp extends StatelessWidget {
+  final ChoiceData choices = ChoiceData();
 
-class WheelOfChoiceAppState extends State<WheelOfChoiceApp> {
-  ChoiceData choices;
-
-  @override
-  void initState() {
-    super.initState();
-    choices = ChoiceData();
+  WheelOfChoiceApp() {
+    Persistence().restore(choices);
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final choiceColors = <Color>[
+const choiceColors = <Color>[
   Colors.brown,
   Colors.indigo,
   Colors.red,

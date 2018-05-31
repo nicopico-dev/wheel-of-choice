@@ -3,22 +3,27 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:wheel_of_choice/colors.dart';
 
 class Choice {
   final String name;
   final Color color;
 
-  Choice({@required this.name, this.color});
+  const Choice({@required this.name, this.color});
+
+  Choice.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        color = Color(json['color']);
+
+  Map<String, dynamic> toJson()=> {
+    'name': name,
+    'color': color.value
+  };
 }
 
 class ChoiceData extends ChangeNotifier {
-  final List<Choice> _choices = <Choice>[
-    Choice(name: 'Boulangerie', color: choiceColors[0]),
-    Choice(name: 'Japonais', color: choiceColors[1]),
-    Choice(name: 'Pizza', color: choiceColors[2]),
-    Choice(name: 'Brasserie', color: choiceColors[3]),
-  ];
+  final List<Choice> _choices = <Choice>[];
+  ChoiceData();
+
   Iterable<Choice> get values => _choices;
 
   operator [](int index) => _choices[index];
@@ -31,6 +36,13 @@ class ChoiceData extends ChangeNotifier {
 
   void remove(Choice choice) {
     _choices.remove(choice);
+    notifyListeners();
+  }
+
+  void set(Iterable<Choice> choices) {
+    this._choices
+      ..clear()
+      ..addAll(choices);
     notifyListeners();
   }
 

@@ -14,7 +14,7 @@ class _RefreshOnChangeState extends State<RefreshOnChange> {
   @override
   void initState() {
     super.initState();
-    widget.changeNotifier.addListener(_refresh);
+    widget.changeNotifier.addListener(() => _refresh());
   }
 
   @override
@@ -24,8 +24,8 @@ class _RefreshOnChangeState extends State<RefreshOnChange> {
 
   @override
   void dispose() {
+    widget.changeNotifier.removeListener(() => _refresh());
     super.dispose();
-    widget.changeNotifier.removeListener(_refresh);
   }
 
   void _refresh() {

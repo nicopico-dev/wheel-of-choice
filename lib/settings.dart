@@ -3,6 +3,7 @@ import 'package:wheel_of_choice/components/choice_color_swatch.dart';
 import 'package:wheel_of_choice/components/choice_editor.dart';
 import 'package:wheel_of_choice/colors.dart';
 import 'package:wheel_of_choice/data.dart';
+import 'package:wheel_of_choice/persistence.dart';
 
 class Settings extends StatefulWidget {
   const Settings(this.choices);
@@ -14,6 +15,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  final Persistence persistence = Persistence();
   final _newChoiceTextController = TextEditingController();
   ChoiceData _choices;
 
@@ -112,7 +114,9 @@ class _SettingsState extends State<Settings> {
 
   void _editChoice(BuildContext context, final Choice choice) {
     final futureChoice = showModalBottomSheet(
-        context: context, builder: (context) => ChoiceEditor(choice: choice));
+      context: context,
+      builder: (context) => ChoiceEditor(choice: choice),
+    );
     futureChoice.then((editedChoice) {
       if (editedChoice is Choice) {
         setState(() => _choices.change(from: choice, to: editedChoice));
@@ -125,4 +129,10 @@ class _SettingsState extends State<Settings> {
     Scaffold.of(context).showSnackBar(
         SnackBar(content: Text("\"${choice.name}\" was removed")));
   }
+
+  @override
+    void setState(VoidCallback fn) {
+      super.setState(fn);
+      persistence.save(_choices);
+    }
 }
