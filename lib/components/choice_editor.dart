@@ -45,7 +45,7 @@ class ChoiceEditorState extends State<ChoiceEditor> {
                     onPressed: () => _onCancelled(context)),
                 FlatButton(
                     child: Text("Save"),
-                    textColor: theme.primaryColorDark,
+                    textColor: theme.primaryColor,
                     onPressed: () => _onSaved(context)),
               ],
             ),

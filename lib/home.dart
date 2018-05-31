@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wheel_of_choice/components/choice_wheel.dart';
+import 'package:wheel_of_choice/components/refresh_on_change.dart';
 import 'package:wheel_of_choice/data.dart';
 
 class Home extends StatelessWidget {
@@ -19,7 +20,10 @@ class Home extends StatelessWidget {
           )
         ],
       ),
-      body: ChoiceWheel(choices: choices),
+      body: RefreshOnChange(
+        builder: (context) => ChoiceWheel(choices: choices),
+        changeNotifier: choices,
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.play_arrow),
         onPressed: () {
