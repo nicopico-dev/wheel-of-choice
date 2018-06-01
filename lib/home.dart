@@ -20,9 +20,14 @@ class Home extends StatelessWidget {
           )
         ],
       ),
-      body: RefreshOnChange(
-        builder: (context) => ChoiceWheel(choices: choices),
-        changeNotifier: choices,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: RefreshOnChange(
+            builder: (context) => ChoiceWheel(choices: choices),
+            changeNotifier: choices,
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.play_arrow),
