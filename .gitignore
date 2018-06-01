@@ -1,12 +1,22 @@
-.DS_Store
+# Flutter & Dart
 .dart_tool/
-
-.packages
 .pub/
-
 build/
-
 .flutter-plugins
+.packages
+pubspec.lock
 
+# IntelliJ
 *.iml
 .idea/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Others
+.DS_Store
+thumbs.db
