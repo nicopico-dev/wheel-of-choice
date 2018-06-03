@@ -48,16 +48,15 @@ class _WheelPainter extends CustomPainter {
     final radius = diameter / 2;
     final rect = Rect.fromLTWH(0.0, 0.0, diameter, diameter);
 
-    final labelSize = 20.0;
-    final textOffset = Offset(- 8.0, - labelSize / 2);
+    final labelSize = 18.0;
+    final textOffset = Offset(-16.0, -labelSize / 2);
     final textPainter = (String text) => TextPainter(
           text: TextSpan(
             text: text,
             style: TextStyle(
-              color: Colors.white,
-              fontSize: labelSize,
-              fontWeight: FontWeight.w500
-            ),
+                color: Colors.white,
+                fontSize: labelSize,
+                fontWeight: FontWeight.w500),
           ),
           textDirection: TextDirection.ltr,
           textAlign: TextAlign.end,
@@ -75,11 +74,31 @@ class _WheelPainter extends CustomPainter {
         ..paint(canvas, textOffset);
       canvas.restore();
     }
+
+    _drawWheelCenter(canvas, radius);
   }
 
   @override
   bool shouldRepaint(_WheelPainter oldDelegate) {
     return !ListEquality().equals(_sections, oldDelegate._sections);
+  }
+
+  void _drawWheelCenter(Canvas canvas, double wheelRadius) {
+    var centerOffset = Offset(wheelRadius, wheelRadius);
+    var centerRadius = wheelRadius * .25;
+    var paint = Paint()
+      ..shader = RadialGradient(
+        center: Alignment(.1, -.12),
+        radius: .6,
+        colors: <Color>[
+          Color.fromARGB(255, 255, 215, 0),
+          Color.fromARGB(255, 218, 165, 32),
+        ],
+      ).createShader(Rect.fromCircle(
+        center: centerOffset,
+        radius: centerRadius,
+      ));
+    canvas.drawCircle(centerOffset, centerRadius, paint);
   }
 }
 

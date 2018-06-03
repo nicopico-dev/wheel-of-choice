@@ -22,7 +22,8 @@ class Home extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Center(
+        child: Align(
+          alignment: Alignment.topCenter,
           child: RefreshOnChange(
             builder: (context) => ChoiceWheel(choices: choices),
             changeNotifier: choices,
