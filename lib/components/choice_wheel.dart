@@ -44,12 +44,36 @@ class _WheelPainter extends CustomPainter {
     final paint = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.fill;
-    final radius = min(size.height, size.width);
-    final rect = Rect.fromLTWH(0.0, 0.0, radius, radius);
+    final diameter = min(size.height, size.width);
+    final radius = diameter / 2;
+    final rect = Rect.fromLTWH(0.0, 0.0, diameter, diameter);
+
+    final labelSize = 20.0;
+    final textOffset = Offset(- 8.0, - labelSize / 2);
+    final textPainter = (String text) => TextPainter(
+          text: TextSpan(
+            text: text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: labelSize,
+              fontWeight: FontWeight.w500
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+          textAlign: TextAlign.end,
+        );
 
     for (var s in _sections) {
-      canvas.drawArc(
-          rect, s.startAngle, s.sweepAngle, true, paint..color = s.color);
+      paint.color = s.color;
+      canvas.drawArc(rect, s.startAngle, s.sweepAngle, true, paint);
+
+      canvas.save();
+      canvas.translate(radius, radius);
+      canvas.rotate(s.startAngle + s.sweepAngle / 2);
+      textPainter(s.label)
+        ..layout(minWidth: radius, maxWidth: radius)
+        ..paint(canvas, textOffset);
+      canvas.restore();
     }
   }
 
