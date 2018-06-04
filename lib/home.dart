@@ -36,7 +36,7 @@ class Home extends StatelessWidget {
           /* TODO */
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

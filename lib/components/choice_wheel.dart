@@ -12,7 +12,7 @@ class ChoiceWheel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final radius = min(constraints.maxWidth, constraints.maxHeight);
+      final radius = max(constraints.maxWidth, constraints.maxHeight);
       return CustomPaint(
         painter: _painter,
         size: Size.square(radius),
@@ -41,12 +41,24 @@ class _WheelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.fill;
-    final diameter = min(size.height, size.width);
+    const wheelPadding = 16.0;
+    final portrait = size.height > size.width;
+    
+    double diameter;
+    if (portrait) {
+      diameter = size.height - (wheelPadding * 2);
+    } else {
+      diameter = size.height * 2 - (wheelPadding * 2);
+    }
+
     final radius = diameter / 2;
     final rect = Rect.fromLTWH(0.0, 0.0, diameter, diameter);
+
+    if (portrait) {
+      canvas.translate(-radius, wheelPadding);
+    } else {
+      canvas.translate(wheelPadding, -radius / 2);
+    }
 
     final labelSize = 18.0;
     final textOffset = Offset(-16.0, -labelSize / 2);
@@ -62,6 +74,10 @@ class _WheelPainter extends CustomPainter {
           textAlign: TextAlign.end,
         );
 
+    final paint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.fill;
+
     for (var s in _sections) {
       paint.color = s.color;
       canvas.drawArc(rect, s.startAngle, s.sweepAngle, true, paint);
@@ -76,6 +92,8 @@ class _WheelPainter extends CustomPainter {
     }
 
     _drawWheelCenter(canvas, radius);
+
+    canvas.restore();
   }
 
   @override
