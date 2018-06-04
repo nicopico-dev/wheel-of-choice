@@ -120,6 +120,8 @@ class _SettingsState extends State<Settings> {
     futureChoice.then((editedChoice) {
       if (editedChoice is Choice) {
         setState(() => _choices.change(from: choice, to: editedChoice));
+      } else if (editedChoice == "DELETE") {
+        _removeChoice(context, choice);
       }
     });
   }

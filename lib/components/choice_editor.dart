@@ -75,7 +75,15 @@ class ChoiceEditorState extends State<ChoiceEditor> {
     if (orientation == Orientation.portrait) {
       return Column(
         children: <Widget>[
-          title,
+          Row(
+            children: <Widget>[
+              Expanded(child: title),
+              IconButton(
+                icon: Icon(Icons.delete,),
+                onPressed: _onDelete,
+              )
+            ],
+          ),
           choiceNameEditor,
           SizedBox(height: 16.0),
           choiceColorPicker
@@ -111,5 +119,9 @@ class ChoiceEditorState extends State<ChoiceEditor> {
   void _onSaved(BuildContext context) {
     var editedChoice = Choice(name: _textController.text, color: _color);
     Navigator.of(context).pop(editedChoice);
+  }
+
+  void _onDelete() {
+    Navigator.of(context).pop("DELETE");
   }
 }
