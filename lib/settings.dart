@@ -18,6 +18,7 @@ class _SettingsState extends State<Settings> {
   final Persistence persistence = Persistence();
   final _newChoiceTextController = TextEditingController();
   ChoiceData _choices;
+  bool _validChoiceName = false;
 
   @override
   void initState() {
@@ -87,13 +88,16 @@ class _SettingsState extends State<Settings> {
                     decoration: InputDecoration(hintText: "Add a new choice"),
                     controller: _newChoiceTextController,
                     onSubmitted: (_) => _addNewChoice(),
+                    onChanged: (value) => setState(() {
+                      _validChoiceName = value.isNotEmpty;
+                    }),
                   ),
                 ),
                 SizedBox(width: 8.0),
                 IconButton(
                   icon: Icon(Icons.add_circle),
                   iconSize: 38.0,
-                  onPressed: _addNewChoice,
+                  onPressed: _validChoiceName ? _addNewChoice : null,
                 ),
               ],
             ),
@@ -109,7 +113,10 @@ class _SettingsState extends State<Settings> {
     var choiceColor = choiceColors[_choices.size % choiceColors.length];
     var newChoice = Choice(name: choiceName, color: choiceColor);
     _newChoiceTextController.clear();
-    setState(() => _choices.add(newChoice));
+    setState(() {
+      _choices.add(newChoice);
+      _validChoiceName = false;
+    });
   }
 
   void _editChoice(BuildContext context, final Choice choice) {
@@ -133,8 +140,8 @@ class _SettingsState extends State<Settings> {
   }
 
   @override
-    void setState(VoidCallback fn) {
-      super.setState(fn);
-      persistence.save(_choices);
-    }
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+    persistence.save(_choices);
+  }
 }
