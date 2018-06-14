@@ -7,7 +7,7 @@ import 'package:wheel_of_choice/data.dart';
 class ChoiceWheel extends StatelessWidget {
   final _WheelPainter _painter;
 
-  ChoiceWheel({ChoiceData choices}) : _painter = _WheelPainter(choices.values);
+  ChoiceWheel({@required List<Choice> choices}) : _painter = _WheelPainter(choices);
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +92,6 @@ class _WheelPainter extends CustomPainter {
     }
 
     _drawWheelCenter(canvas, radius);
-
-    canvas.restore();
   }
 
   @override

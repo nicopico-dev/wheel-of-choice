@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wheel_of_choice/colors.dart';
@@ -12,7 +13,7 @@ class Persistence {
     Choice(name: 'Brasserie', color: choiceColors[3]),
   ];
 
-  void restore(ChoiceData choiceData) async {
+  Future<List<Choice>> load() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var data = prefs.getString(_CHOICES_PREF_KEY);
     List<Choice> choices;
@@ -21,12 +22,12 @@ class Persistence {
       var converter = (obj) => new Choice.fromJson(obj);
       choices = jsonList.map(converter).toList();
     }
-    choiceData.set(choices ?? _defaultChoices);
+    return choices ?? _defaultChoices;
   }
 
-  void save(ChoiceData choiceData) async {
+  void save(List<Choice> choices) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var jsonGenerator = choiceData.values.map((c) => c.toJson());
+    var jsonGenerator = choices.map((c) => c.toJson());
     var jsonData = json.encode(jsonGenerator.toList());
     prefs.setString(_CHOICES_PREF_KEY, jsonData);
   }

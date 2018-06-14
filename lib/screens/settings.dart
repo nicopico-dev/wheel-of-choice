@@ -6,10 +6,6 @@ import 'package:wheel_of_choice/persistence.dart';
 import 'package:wheel_of_choice/screens/choice_editor.dart';
 
 class Settings extends StatefulWidget {
-  const Settings(this.choices);
-
-  final ChoiceData choices;
-
   @override
   _SettingsState createState() => new _SettingsState();
 }
@@ -17,24 +13,22 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final Persistence persistence = Persistence();
   final _newChoiceTextController = TextEditingController();
-  ChoiceData _choices;
   bool _validChoiceName = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _choices = widget.choices;
-  }
+  // FIXME Change on choices are a side-effect of modifying the global choices
+  List<Choice> _choices;
 
   @override
   Widget build(BuildContext context) {
+    _choices = ChoiceProvider.of(context);
+
     return Scaffold(
       appBar: AppBar(title: Text('Settings')),
       body: Column(children: <Widget>[
         Flexible(
           child: SafeArea(
             child: ListView.builder(
-              itemCount: _choices.size,
+              itemCount: _choices.length,
               itemBuilder: (context, index) => _buildListItem(context,
                   choice: _choices[index],
                   onTap: _editChoice,
@@ -89,8 +83,8 @@ class _SettingsState extends State<Settings> {
                     controller: _newChoiceTextController,
                     onSubmitted: (_) => _addNewChoice(),
                     onChanged: (value) => setState(() {
-                      _validChoiceName = value.isNotEmpty;
-                    }),
+                          _validChoiceName = value.isNotEmpty;
+                        }),
                   ),
                 ),
                 SizedBox(width: 8.0),
@@ -110,7 +104,7 @@ class _SettingsState extends State<Settings> {
   void _addNewChoice() {
     if (_newChoiceTextController.text.isEmpty) return;
     var choiceName = _newChoiceTextController.text;
-    var choiceColor = choiceColors[_choices.size % choiceColors.length];
+    var choiceColor = choiceColors[_choices.length % choiceColors.length];
     var newChoice = Choice(name: choiceName, color: choiceColor);
     _newChoiceTextController.clear();
     setState(() {
@@ -126,7 +120,12 @@ class _SettingsState extends State<Settings> {
     );
     futureChoice.then((editedChoice) {
       if (editedChoice is Choice) {
-        setState(() => _choices.change(from: choice, to: editedChoice));
+        setState(() {
+          var index = _choices.indexOf(choice);
+          _choices
+            ..removeAt(index)
+            ..insert(index, editedChoice);
+        });
       } else if (editedChoice == "DELETE") {
         _removeChoice(context, choice);
       }

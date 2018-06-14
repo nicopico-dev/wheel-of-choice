@@ -14,42 +14,22 @@ class Choice {
       : name = json['name'],
         color = Color(json['color']);
 
-  Map<String, dynamic> toJson()=> {
-    'name': name,
-    'color': color.value
-  };
+  Map<String, dynamic> toJson() => {'name': name, 'color': color.value};
 }
 
-class ChoiceData extends ChangeNotifier {
-  final List<Choice> _choices = <Choice>[];
-  ChoiceData();
+class ChoiceProvider extends InheritedWidget {
+  final List<Choice> choices;
 
-  Iterable<Choice> get values => _choices;
+  const ChoiceProvider({Key key, Widget child, this.choices = const <Choice>[]})
+      : super(key: key, child: child);
 
-  operator [](int index) => _choices[index];
-  int get size => _choices.length;
-
-  void add(Choice choice) {
-    _choices.add(choice);
-    notifyListeners();
+  bool updateShouldNotify(ChoiceProvider oldWidget) {
+    return !listEquals(choices, oldWidget.choices);
   }
 
-  void remove(Choice choice) {
-    _choices.remove(choice);
-    notifyListeners();
-  }
-
-  void set(Iterable<Choice> choices) {
-    this._choices
-      ..clear()
-      ..addAll(choices);
-    notifyListeners();
-  }
-
-  void change({@required Choice from, @required Choice to}) {
-    var index = _choices.indexOf(from);
-    _choices
-      ..removeAt(index)
-      ..insert(index, to);
+  static List<Choice> of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(ChoiceProvider)
+            as ChoiceProvider)
+        .choices;
   }
 }
