@@ -2,17 +2,18 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:wheel_of_choice/data.dart';
+import 'package:wheel_of_choice/data/choice.dart';
 
 class ChoiceWheel extends StatelessWidget {
   final _WheelPainter _painter;
 
-  ChoiceWheel({@required List<Choice> choices}) : _painter = _WheelPainter(choices);
+  ChoiceWheel({@required List<Choice> choices})
+      : _painter = _WheelPainter(_padChoices(choices));
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final radius = max(constraints.maxWidth, constraints.maxHeight);
+      final radius = min(constraints.maxWidth, constraints.maxHeight);
       return CustomPaint(
         painter: _painter,
         size: Size.square(radius),
@@ -20,6 +21,9 @@ class ChoiceWheel extends StatelessWidget {
       );
     });
   }
+
+  Choice getChoice({double wheelTurns, double needleAngle}) =>
+      _painter.getChoice(wheelTurns, needleAngle);
 }
 
 const MIN_SECTION_COUNT = 5;
@@ -28,37 +32,23 @@ class _WheelPainter extends CustomPainter {
   List<_Section> _sections;
 
   _WheelPainter(Iterable<Choice> choices) {
-    var paddedChoices = _padChoices(choices);
-
-    final sweepAngle = (2 * pi) / paddedChoices.length;
-    var startAngle = 0.0;
-    _sections = paddedChoices.map((c) {
-      var section = _Section(c, startAngle, sweepAngle);
-      startAngle = section.endAngle;
+    final sweepAngle = (2 * pi) / choices.length;
+    var sectionStartAngle = 0.0;
+    _sections = choices.map((c) {
+      var section = _Section(c, sectionStartAngle, sweepAngle);
+      sectionStartAngle = section.endAngle;
       return section;
     }).toList();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
-    const wheelPadding = 16.0;
-    final portrait = size.height > size.width;
-    
-    double diameter;
-    if (portrait) {
-      diameter = size.height - (wheelPadding * 2);
-    } else {
-      diameter = size.height * 2 - (wheelPadding * 2);
-    }
-
+    final paint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.fill;
+    final diameter = min(size.width, size.height);
     final radius = diameter / 2;
     final rect = Rect.fromLTWH(0.0, 0.0, diameter, diameter);
-
-    if (portrait) {
-      canvas.translate(-radius, wheelPadding);
-    } else {
-      canvas.translate(wheelPadding, -radius / 2);
-    }
 
     final labelSize = 18.0;
     final textOffset = Offset(-16.0, -labelSize / 2);
@@ -74,10 +64,6 @@ class _WheelPainter extends CustomPainter {
           textAlign: TextAlign.end,
         );
 
-    final paint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.fill;
-
     for (var s in _sections) {
       paint.color = s.color;
       canvas.drawArc(rect, s.startAngle, s.sweepAngle, true, paint);
@@ -90,8 +76,6 @@ class _WheelPainter extends CustomPainter {
         ..paint(canvas, textOffset);
       canvas.restore();
     }
-
-    _drawWheelCenter(canvas, radius);
   }
 
   @override
@@ -99,22 +83,18 @@ class _WheelPainter extends CustomPainter {
     return !ListEquality().equals(_sections, oldDelegate._sections);
   }
 
-  void _drawWheelCenter(Canvas canvas, double wheelRadius) {
-    var centerOffset = Offset(wheelRadius, wheelRadius);
-    var centerRadius = wheelRadius * .25;
-    var paint = Paint()
-      ..shader = RadialGradient(
-        center: Alignment(.1, -.12),
-        radius: .6,
-        colors: <Color>[
-          Color.fromARGB(255, 255, 215, 0),
-          Color.fromARGB(255, 218, 165, 32),
-        ],
-      ).createShader(Rect.fromCircle(
-        center: centerOffset,
-        radius: centerRadius,
-      ));
-    canvas.drawCircle(centerOffset, centerRadius, paint);
+  Choice getChoice(double wheelTurns, double needleAngle) {
+    // TODO Handle needleAngle
+    var wheelTurnsDecimals = wheelTurns - wheelTurns.truncateToDouble();
+    var angle = (1 - wheelTurnsDecimals) * 2 * pi;
+    try {
+      return _sections
+          .firstWhere((s) => s.startAngle <= angle && angle <= s.endAngle)
+          .choice;
+    } catch (e) {
+      debugPrint("WARN: No value for $angle in $_sections");
+      return Choice(name: "NONE");
+    }
   }
 }
 

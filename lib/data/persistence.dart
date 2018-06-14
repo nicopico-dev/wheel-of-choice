@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wheel_of_choice/colors.dart';
-import 'package:wheel_of_choice/data.dart';
+import 'package:wheel_of_choice/data/choice.dart';
 
 class Persistence {
   static const _CHOICES_PREF_KEY = 'CHOICES';

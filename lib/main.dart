@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wheel_of_choice/data.dart';
-import 'package:wheel_of_choice/persistence.dart';
+import 'package:wheel_of_choice/data/choice.dart';
+import 'package:wheel_of_choice/data/persistence.dart';
 import 'package:wheel_of_choice/screens/home.dart';
 import 'package:wheel_of_choice/screens/settings.dart';
 
