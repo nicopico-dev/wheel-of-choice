@@ -16,6 +16,7 @@ pubspec.lock
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.vs/
 
 # Others
 .DS_Store
