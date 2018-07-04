@@ -8,10 +8,7 @@ import 'package:wheel_of_choice/components/spinning_wheel.dart';
 import 'package:wheel_of_choice/components/wheel.dart';
 import 'package:wheel_of_choice/components/wheel_pivot.dart';
 import 'package:wheel_of_choice/data/choice.dart';
-
-
-const double _wheelSize = 500.0;
-const Offset _wheelOffset = Offset(-1 * _wheelSize / 2.0 + 32, 0.0);
+import 'package:wheel_of_choice/data/section.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -88,8 +85,11 @@ class _BodyWidgetState extends State<_BodyWidget> {
   Widget build(BuildContext context) {
     wheel = SpinningChoiceWheel(
       spinner: widget.spinner,
-      wheel: ChoiceWheel(
-        choices: ChoiceProvider.of(context),
+      wheel: Wheel(
+        sections: convertToSections(
+          ChoiceProvider.of(context),
+          minimum: 5,
+        ),
       ),
       resultSink: resultController.sink,
     );
@@ -102,6 +102,9 @@ class _BodyWidgetState extends State<_BodyWidget> {
             ),
           ),
     );
+
+    const double _wheelSize = 500.0;
+    const Offset _wheelOffset = Offset(-1 * _wheelSize / 2.0 + 32, 0.0);
 
     return Stack(
       alignment: Alignment.center,

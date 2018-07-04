@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 class WheelPivot extends StatelessWidget {
-  final _painter = _PivotPainter();
+  final _painter = const _PivotPainter();
+
+  const WheelPivot();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,8 @@ class WheelPivot extends StatelessWidget {
 }
 
 class _PivotPainter extends CustomPainter {
+  const _PivotPainter();
+
   @override
   void paint(Canvas canvas, Size size) {
     var pivotOffset = size.center(Offset(0.0, 0.0));

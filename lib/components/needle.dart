@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Needle extends StatelessWidget {
-  final _painter = _NeedlePainter();
+  final _painter = const _NeedlePainter();
+
+  const Needle();
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +15,8 @@ class Needle extends StatelessWidget {
 }
 
 class _NeedlePainter extends CustomPainter {
+  const _NeedlePainter();
+
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()..color = Colors.red;
