@@ -6,7 +6,7 @@ import 'package:wheel_of_choice/data/choice.dart';
 class SpinningChoiceWheel extends StatefulWidget {
   final Spinner spinner;
   final double needleAngle;
-  final ChoiceWheel wheel;
+  final Wheel wheel;
   final Sink<Choice> resultSink;
   final Sink<Choice> realtimeSink;
 

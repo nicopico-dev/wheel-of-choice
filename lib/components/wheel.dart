@@ -3,12 +3,13 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:wheel_of_choice/data/choice.dart';
+import 'package:wheel_of_choice/data/section.dart';
 
-class ChoiceWheel extends StatelessWidget {
+class Wheel extends StatelessWidget {
   final _WheelPainter _painter;
 
-  ChoiceWheel({@required List<Choice> choices})
-      : _painter = _WheelPainter(_padChoices(choices));
+  Wheel({@required Iterable<Section> sections})
+      : _painter = _WheelPainter(sections);
 
   @override
   Widget build(BuildContext context) {
@@ -29,17 +30,9 @@ class ChoiceWheel extends StatelessWidget {
 const MIN_SECTION_COUNT = 5;
 
 class _WheelPainter extends CustomPainter {
-  List<_Section> _sections;
+  final Iterable<Section> _sections;
 
-  _WheelPainter(Iterable<Choice> choices) {
-    final sweepAngle = (2 * pi) / choices.length;
-    var sectionStartAngle = 0.0;
-    _sections = choices.map((c) {
-      var section = _Section(c, sectionStartAngle, sweepAngle);
-      sectionStartAngle = section.endAngle;
-      return section;
-    }).toList();
-  }
+  const _WheelPainter(this._sections);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -80,7 +73,7 @@ class _WheelPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_WheelPainter oldDelegate) {
-    return !ListEquality().equals(_sections, oldDelegate._sections);
+    return !IterableEquality().equals(_sections, oldDelegate._sections);
   }
 
   Choice getChoice(double wheelTurns, double needleAngle) {
@@ -96,24 +89,4 @@ class _WheelPainter extends CustomPainter {
       return Choice(name: "NONE");
     }
   }
-}
-
-Iterable<Choice> _padChoices(Iterable<Choice> choices) {
-  if (choices.length >= MIN_SECTION_COUNT || choices.length == 0) {
-    return choices;
-  } else {
-    return _padChoices(choices.followedBy(choices));
-  }
-}
-
-class _Section {
-  final Choice choice;
-  final double startAngle;
-  final double sweepAngle;
-
-  const _Section(this.choice, this.startAngle, this.sweepAngle);
-
-  double get endAngle => startAngle + sweepAngle;
-  String get label => choice.name;
-  Color get color => choice.color;
 }
