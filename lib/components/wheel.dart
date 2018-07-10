@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:wheel_of_choice/colors.dart';
 import 'package:wheel_of_choice/data/choice.dart';
 import 'package:wheel_of_choice/data/section.dart';
 
@@ -60,6 +61,7 @@ class _WheelPainter extends CustomPainter {
     for (var s in _sections) {
       paint.color = s.color;
       canvas.drawArc(rect, s.startAngle, s.sweepAngle, true, paint);
+      canvas.drawArc(rect, s.startAngle, s.sweepAngle, true, defaultStrokePaint);
 
       canvas.save();
       canvas.translate(radius, radius);

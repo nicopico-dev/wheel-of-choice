@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wheel_of_choice/colors.dart';
 
 class WheelPivot extends StatelessWidget {
   final _painter = const _PivotPainter();
@@ -27,7 +29,7 @@ class _PivotPainter extends CustomPainter {
     var pivotOffset = size.center(Offset(0.0, 0.0));
     var centerRadius = min(size.height, size.width) * .125;
     var paint = Paint()
-      ..shader = RadialGradient(
+      ..shader = const RadialGradient(
         center: Alignment(.1, -.12),
         radius: .6,
         colors: <Color>[
@@ -39,6 +41,7 @@ class _PivotPainter extends CustomPainter {
         radius: centerRadius,
       ));
     canvas.drawCircle(pivotOffset, centerRadius, paint);
+    canvas.drawCircle(pivotOffset, centerRadius, defaultStrokePaint);
   }
 
   @override

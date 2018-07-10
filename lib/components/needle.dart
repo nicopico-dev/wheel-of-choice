@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wheel_of_choice/colors.dart';
 
 class Needle extends StatelessWidget {
   final _painter = const _NeedlePainter();
@@ -19,7 +20,6 @@ class _NeedlePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var paint = Paint()..color = Colors.red;
     var path = Path()
       ..moveTo(size.width, 0.0)
       ..lineTo(0.0, size.height / 2)
@@ -31,9 +31,14 @@ class _NeedlePainter extends CustomPainter {
       )
       ..close();
     canvas.drawShadow(path, Colors.grey, 2.0, false);
-    canvas.drawPath(path, paint);
+    canvas.drawPath(path, _fillPaint);
+    canvas.drawPath(path, defaultStrokePaint);
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+final _fillPaint = Paint()
+  ..style = PaintingStyle.fill
+  ..color = Colors.red;

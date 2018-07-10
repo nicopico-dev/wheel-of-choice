@@ -12,3 +12,8 @@ final choiceColors = <Color>[
   Colors.cyan,
   Colors.pink
 ];
+
+final defaultStrokePaint = Paint()
+  ..style = PaintingStyle.stroke
+  ..strokeWidth = 1.0
+  ..color = Colors.black45;
