@@ -10,7 +10,7 @@ class Needle extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: _painter,
-      size: Size.infinite,
+      size: Size(70.0, 30.0),
     );
   }
 }

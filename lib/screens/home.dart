@@ -124,8 +124,6 @@ class _BodyWidgetState extends State<_BodyWidget> {
             Positioned(
               child: Needle(),
               left: needleLeft,
-              width: 70.0,
-              height: 30.0,
             ),
           ],
         );
