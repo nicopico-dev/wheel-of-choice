@@ -12,19 +12,20 @@ class WheelOfChoiceApp extends StatelessWidget {
     return FutureBuilder<List<Choice>>(
       future: Persistence().load(),
       builder: (context, snap) => ChoiceProvider(
-        choices: snap.data ?? <Choice>[],
-        child: MaterialApp(
-          title: 'Wheel of Choice',
-          theme: ThemeData(
-              primarySwatch: Colors.blue,
-              accentColor: Colors.amberAccent,
-              accentColorBrightness: Brightness.dark),
-          routes: <String, WidgetBuilder>{
-            '/': (context) => Home(),
-            '/settings': (context) => Settings()
-          },
-        ),
-      ),
+            choices: snap.data ?? <Choice>[],
+            child: MaterialApp(
+              title: 'Wheel of Choice',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+                accentColor: Colors.blue,
+                accentColorBrightness: Brightness.dark,
+              ),
+              routes: <String, WidgetBuilder>{
+                '/': (context) => Home(),
+                '/settings': (context) => Settings()
+              },
+            ),
+          ),
     );
   }
 }
