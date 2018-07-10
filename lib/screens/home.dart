@@ -83,59 +83,107 @@ class _BodyWidgetState extends State<_BodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    wheel = SpinningChoiceWheel(
-      spinner: widget.spinner,
-      wheel: Wheel(
-        sections: convertToSections(
-          ChoiceProvider.of(context),
-          minimum: 5,
-        ),
-      ),
-      resultSink: resultController.sink,
-    );
-
     rSub?.cancel();
-    rSub = resultController.stream.listen(
-      (c) => Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Result: ${c.name}!"),
-            ),
-          ),
-    );
-
-    return LayoutBuilder(builder: (context, constraint) {
-      var width = constraint.maxWidth;
-      var height = constraint.maxHeight;
-      var minSide = min(width, height);
-      var wheelSize = minSide * 1.7;
-      var bigWheel = buildBigWheel(wheelSize);
-
-      var wheelOffset = Offset(
-        -minSide / 2,
-        0.0,
-      );
-      var needleLeft = (width + wheelSize) / 2 + wheelOffset.dx - 15;
-
-      return Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          // Make the wheel bigger than the screen
-          Transform.translate(
-            offset: wheelOffset,
-            child: bigWheel,
-          ),
-          Positioned(
-            child: Needle(),
-            left: needleLeft,
-            width: 70.0,
-            height: 30.0,
-          ),
-        ],
-      );
+    rSub = resultController.stream.listen((choice) {
+      //showResult(context, choice);
+      Future.delayed(Duration(milliseconds: 300), () => showResult(context, choice));
     });
+
+    return LayoutBuilder(
+      builder: (context, constraint) {
+        var width = constraint.maxWidth;
+        var height = constraint.maxHeight;
+        var minSide = min(width, height);
+        var wheelSize = minSide * 1.7;
+
+        var wheelOffset = Offset(-minSide / 2, 0.0);
+        var needleLeft = (width + wheelSize) / 2 + wheelOffset.dx - 15;
+
+        return Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            // Make the wheel bigger than the screen
+            Transform.translate(
+              offset: wheelOffset,
+              child: _BigWheel(
+                wheel: SpinningChoiceWheel(
+                  spinner: widget.spinner,
+                  wheel: Wheel(
+                    sections: convertToSections(
+                      ChoiceProvider.of(context),
+                      minimum: 5,
+                    ),
+                  ),
+                  resultSink: resultController.sink,
+                ),
+                wheelSize: wheelSize,
+              ),
+            ),
+            Positioned(
+              child: Needle(),
+              left: needleLeft,
+              width: 70.0,
+              height: 30.0,
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  OverflowBox buildBigWheel(num wheelSize) {
+  void showResult(BuildContext context, Choice result) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    result.name,
+                    style: Theme.of(context).textTheme.headline,
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Nope !"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  widget.spinner.spin();
+                },
+              ),
+              FlatButton(
+                child: Text("OK"),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          ),
+    );
+  }
+
+  @override
+  void dispose() {
+    rSub.cancel();
+    resultController.close();
+    super.dispose();
+  }
+}
+
+class _BigWheel extends StatelessWidget {
+  const _BigWheel({
+    Key key,
+    @required this.wheel,
+    @required this.wheelSize,
+  }) : super(key: key);
+
+  final SpinningChoiceWheel wheel;
+  final num wheelSize;
+
+  @override
+  Widget build(BuildContext context) {
     return OverflowBox(
       minWidth: wheelSize,
       maxWidth: wheelSize,
@@ -148,12 +196,5 @@ class _BodyWidgetState extends State<_BodyWidget> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    rSub?.cancel();
-    resultController.close();
-    super.dispose();
   }
 }
