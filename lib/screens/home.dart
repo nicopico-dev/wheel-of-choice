@@ -10,6 +10,8 @@ import 'package:wheel_of_choice/components/wheel_pivot.dart';
 import 'package:wheel_of_choice/data/choice.dart';
 import 'package:wheel_of_choice/data/section.dart';
 
+const MIN_SECTIONS_COUNT = 9;
+
 class Home extends StatefulWidget {
   @override
   HomeState createState() {
@@ -111,7 +113,7 @@ class _BodyWidgetState extends State<_BodyWidget> {
                   wheel: Wheel(
                     sections: convertToSections(
                       ChoiceProvider.of(context),
-                      minimum: 5,
+                      minimum: MIN_SECTIONS_COUNT,
                     ),
                   ),
                   resultSink: resultController.sink,
